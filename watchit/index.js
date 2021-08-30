@@ -15,6 +15,7 @@
  * 
  * 
  * 
+ * 
  * */
 
 const debounce = require('lodash.debounce');
@@ -37,11 +38,19 @@ program
       throw new Error(`Could not find the file ${name}`);
     }
 
+    // to kill <ChildProcess> spawn produces
+    let proc;
     const start = debounce(() => {
       // console.log('Starting Users Program');
 
-      //spawn('command we want to run', [name of file we want to execute], {stdio: 'inherit'})
-      spawn('node', [name], { stdio: 'inherit' });
+      // checkk to see if proc is defined
+      if (proc) {
+        proc.kill()
+      }
+      console.log('>>>> Starting process...');
+
+      //spawn('command we want to run', [name of file we want to execute], {stdio: 'inherit'}); spawn returns <ChildProcess> object
+      proc = spawn('node', [name], { stdio: 'inherit' });
     }, 100);
 
     chokidar
